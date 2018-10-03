@@ -1,0 +1,42 @@
+{
+  "name": "restaurant-reviews-stage-2",
+  "version": "1.0.0",
+  "description": "Udacity MWS project",
+  "main": " ",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "backend": "node restaurants-api/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sLakshmiprasad/restaurant-reviews-stage-2.git"
+  },
+  "keywords": [
+    "Progressive",
+    "web",
+    "app"
+  ],
+  "author": "LP",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sLakshmiprasad/restaurant-reviews-stage-2/issues"
+  },
+  "homepage": "https://github.com/sLakshmiprasad/restaurant-reviews-stage-2#readme",
+  "devDependencies": {
+    "browser-sync": "^2.24.7",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^6.0.0",
+    "gulp-clean-css": "^3.10.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-filter": "^5.1.0",
+    "gulp-imagemin": "^4.1.0",
+    "gulp-sass": "^4.0.1",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.1",
+    "gulp-uglify-es": "^1.0.4",
+    "gulp-watch": "^5.0.1",
+    "uglify-es": "^3.3.9"
+  },
+  "dependencies": {}
+}
