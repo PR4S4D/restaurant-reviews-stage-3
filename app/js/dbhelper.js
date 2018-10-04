@@ -1,4 +1,6 @@
 const RESTAURANTS = "restaurants";
+const port = 1337; // Change this to your server port
+
 /**
  * Common database helper functions.
  */
@@ -8,8 +10,11 @@ class DBHelper {
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    const port = 1337; // Change this to your server port
     return `http://localhost:${port}/restaurants`;
+  }
+
+  static get RESTAURANT_REVIEW_URL() {
+    return `http://localhost:${port}/reviews?restaurant_id=`;
   }
 
   /**
@@ -196,6 +201,13 @@ class DBHelper {
     );
     marker.addTo(newMap);
     return marker;
+  }
+
+  static fetchRestaurantReviews(restaurantId) {
+    return fetch(this.RESTAURANT_REVIEW_URL + restaurantId)
+      .then(response => response.json())
+      .then(reviews => new Promise(resolve => resolve(reviews)))
+      .catch(error => new Promise((resolve, reject) => reject(error)));
   }
 }
 

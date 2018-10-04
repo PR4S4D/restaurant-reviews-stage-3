@@ -1,5 +1,5 @@
 {
-  "name": "restaurant-reviews-stage-2",
+  "name": "restaurant-reviews-stage-3",
   "version": "1.0.0",
   "description": "Udacity MWS project",
   "main": " ",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sLakshmiprasad/restaurant-reviews-stage-2.git"
+    "url": "git+https://github.com/sLakshmiprasad/restaurant-reviews-stage-3.git"
   },
   "keywords": [
     "Progressive",
@@ -19,9 +19,9 @@
   "author": "LP",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/sLakshmiprasad/restaurant-reviews-stage-2/issues"
+    "url": "https://github.com/sLakshmiprasad/restaurant-reviews-stage-3/issues"
   },
-  "homepage": "https://github.com/sLakshmiprasad/restaurant-reviews-stage-2#readme",
+  "homepage": "https://github.com/sLakshmiprasad/restaurant-reviews-stage-3#readme",
   "devDependencies": {
     "browser-sync": "^2.24.7",
     "del": "^3.0.0",
