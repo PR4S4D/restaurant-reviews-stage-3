@@ -98,7 +98,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  fetchRestaurantReviews();
 };
 
 /**
@@ -124,30 +124,34 @@ fillRestaurantHoursHTML = (
   }
 };
 
-/**
- * Create all reviews HTML and add them to the webpage.
- */
-fillReviewsHTML = (/* reviews = self.restaurant.reviews */) => {
+fetchRestaurantReviews = () => {
+  let restaurantId = self.restaurant.id;
+  // Display the cached reviews when available
+  DBHelper.getCachedReviews(restaurantId).then(reviews => {
+    fillReviewsHTML(reviews);
+  });
+  // Fetch new reviews from the API
+  DBHelper.fetchRestaurantReviews(self.restaurant.id).then(reviews => {
+    fillReviewsHTML(reviews);
+  });
+};
+
+fillReviewsHTML = reviews => {
   const container = document.getElementById("reviews-container");
   const title = document.getElementById("reviews-title");
   title.innerHTML = "Reviews";
-
-  DBHelper.fetchRestaurantReviews(self.restaurant.id)
-    .then(reviews => {
-      if (!reviews) {
-        const noReviews = document.createElement("p");
-        noReviews.innerHTML = "No reviews yet!";
-        container.appendChild(noReviews);
-        return;
-      }
-      const ul = document.getElementById("reviews-list");
-      ul.innerHTML = "";
-      reviews.forEach(review => {
-        ul.appendChild(createReviewHTML(review));
-      });
-      container.appendChild(ul);
-    })
-    .catch(error => console.log(error));
+  if (!reviews) {
+    const noReviews = document.createElement("p");
+    noReviews.innerHTML = "No reviews yet!";
+    container.appendChild(noReviews);
+    return;
+  }
+  const ul = document.getElementById("reviews-list");
+  ul.innerHTML = "";
+  reviews.forEach(review => {
+    ul.appendChild(createReviewHTML(review));
+  });
+  container.appendChild(ul);
 };
 
 /**
@@ -175,7 +179,6 @@ createReviewHTML = review => {
   const comments = document.createElement("p");
   comments.innerHTML = review.comments;
   li.appendChild(comments);
-
   return li;
 };
 

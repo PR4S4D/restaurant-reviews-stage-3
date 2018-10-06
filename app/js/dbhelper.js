@@ -1,4 +1,5 @@
 const RESTAURANTS = "restaurants";
+const REVIEWS = "reviews";
 const port = 1337; // Change this to your server port
 
 /**
@@ -21,7 +22,7 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    showCachedMessages(callback).then(() => {
+    showCachedRestaurants(callback).then(() => {
       fetch(this.DATABASE_URL)
         .then(response => {
           if (response.status !== 200) {
@@ -203,10 +204,32 @@ class DBHelper {
     return marker;
   }
 
+  static getCachedReviews(id) {
+    return getDBPromise().then(db => {
+      let index = db
+        .transaction(REVIEWS)
+        .objectStore(REVIEWS)
+        .index("updatedAt");
+
+      if (!index) return;
+
+      return index
+        .getAll()
+        .then(
+          reviews =>
+            reviews && reviews.filter(review => review.restaurant_id === id)
+        )
+        .then(reviews => new Promise(resolve => resolve(reviews)));
+    });
+  }
+
   static fetchRestaurantReviews(restaurantId) {
     return fetch(this.RESTAURANT_REVIEW_URL + restaurantId)
       .then(response => response.json())
-      .then(reviews => new Promise(resolve => resolve(reviews)))
+      .then(reviews => {
+        updateReviewsCache(reviews);
+        return new Promise(resolve => resolve(reviews));
+      })
       .catch(error => new Promise((resolve, reject) => reject(error)));
   }
 }
@@ -247,13 +270,21 @@ getDBPromise = () => {
     return Promise.resolve();
   }
 
-  return idb.open("restaurants-db", 5, upgradeDB => {
-    let store = upgradeDB.createObjectStore(RESTAURANTS, { keyPath: "id" });
-    store.createIndex("updatedAt", "updatedAt");
+  return idb.open("restaurants-db", 6, upgradeDB => {
+    if (!upgradeDB.objectStoreNames.contains(RESTAURANTS)) {
+      let store = upgradeDB.createObjectStore(RESTAURANTS, { keyPath: "id" });
+      store.createIndex("updatedAt", "updatedAt");
+    }
+    if (!upgradeDB.objectStoreNames.contains(REVIEWS)) {
+      let reviewsStore = upgradeDB.createObjectStore(REVIEWS, {
+        keyPath: ["restaurant_id", "id"]
+      });
+      reviewsStore.createIndex("updatedAt", "updatedAt");
+    }
   });
 };
 
-showCachedMessages = callback => {
+showCachedRestaurants = callback => {
   return getDBPromise().then(db => {
     let index = db
       .transaction(RESTAURANTS)
@@ -264,6 +295,17 @@ showCachedMessages = callback => {
         callback(null, restaurants);
       }
     });
+  });
+};
+
+updateReviewsCache = reviews => {
+  if (!reviews) return;
+
+  getDBPromise().then(db => {
+    let reviewsStore = db
+      .transaction(REVIEWS, "readwrite")
+      .objectStore(REVIEWS);
+    reviews.map(review => reviewsStore.put(review));
   });
 };
 
