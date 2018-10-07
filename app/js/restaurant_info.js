@@ -43,6 +43,7 @@ initMap = () => {
         }
       ).addTo(newMap);
       fillBreadcrumb();
+      initReviewForm();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
     }
   });
@@ -201,4 +202,21 @@ getParameterByName = (name, url) => {
   if (!results) return null;
   if (!results[2]) return "";
   return decodeURIComponent(results[2].replace(/\+/g, " "));
+};
+
+initReviewForm = () => {
+  let reviewForm = document.getElementById("review-form");
+  reviewForm.onsubmit = event => {
+    event.preventDefault();
+    let review = {
+      restaurant_id: self.restaurant.id,
+      name: event.target.name.value,
+      rating: event.target.rating.value,
+      comments: event.target.review.value
+    };
+    DBHelper.postReview(review)
+      .then(() => fetchRestaurantReviews())
+      .then(() => reviewForm.reset)
+      .catch(error => console.log("error posting review", review));
+  };
 };

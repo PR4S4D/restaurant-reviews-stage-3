@@ -170,9 +170,22 @@ createRestaurantHTML = restaurant => {
   image.setAttribute("class", "lozad");
   li.append(image);
 
+  const span = document.createElement("span");
+  span.className = "restaurant-title";
+
+  const favImage = document.createElement("img");
+  favImage.className = "fav";
+  favImage.src = restaurant.is_favorite
+    ? "img/favourite.svg"
+    : "img/make_favourite.svg";
+  favImage.setAttribute("alt", "Add this to favourites");
+
   const name = document.createElement("h2");
   name.innerHTML = restaurant.name;
-  li.append(name);
+
+  span.append(name);
+  span.append(favImage);
+  li.append(span);
 
   const neighborhood = document.createElement("p");
   neighborhood.innerHTML = restaurant.neighborhood;

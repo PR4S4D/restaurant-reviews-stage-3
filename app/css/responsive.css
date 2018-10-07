@@ -78,11 +78,11 @@
   }
 
   #reviews-list {
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
   }
 
   #reviews-list li {
-    width: 30%;
+    width: 28%;
   }
 
   #review-form .input-group {

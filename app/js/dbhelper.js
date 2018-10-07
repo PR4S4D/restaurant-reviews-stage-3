@@ -18,6 +18,9 @@ class DBHelper {
     return `http://localhost:${port}/reviews?restaurant_id=`;
   }
 
+  static get POST_REVIEW_URL() {
+    return `http://localhost:${port}/reviews/`;
+  }
   /**
    * Fetch all restaurants.
    */
@@ -231,6 +234,13 @@ class DBHelper {
         return new Promise(resolve => resolve(reviews));
       })
       .catch(error => new Promise((resolve, reject) => reject(error)));
+  }
+
+  static postReview(review) {
+    return fetch(this.POST_REVIEW_URL, {
+      method: "POST",
+      body: JSON.stringify(review)
+    });
   }
 }
 

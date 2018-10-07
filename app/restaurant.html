@@ -104,21 +104,5 @@
   <!-- End scripts -->
 
 </body>
-<script>
-  let reviewForm = document.getElementById("review-form");
-  var eventObj;
-  reviewForm.onsubmit = event => {
-    eventObj = event;
-    event.preventDefault();
-    let review = {
-      "restaurant_id": self.restaurant.id,
-      "name": event.target.name.value,
-      "rating": event.target.rating.value,
-      "comments": event.target.review.value
-    }
-    console.log(review);
-    reviewForm.reset();
-  }
-</script>
 
 </html>
