@@ -60,6 +60,19 @@
       </div>
     </section>
     <!-- end restaurant -->
+
+    <section id="add-review-container">
+      <h3>Add a review</h3>
+      <form id="review-form" method="post">
+        <span class="input-group">
+          <input type="text" id="reviewer-name" name="name" placeholder="Your Name" required>
+          <input type="number" id="rating" name="rating" placeholder="Rating (1-5)" min="1" max="5" required>
+        </span>
+        <textarea rows="4" id="restaurant-review" name="review" placeholder="Add your review here..." required></textarea>
+        <input type="submit" value="Submit Review">
+      </form>
+    </section>
+
     <!-- Beginning reviews -->
     <section id="reviews-container">
       <h3 id="reviews-title"></h3>
@@ -91,5 +104,21 @@
   <!-- End scripts -->
 
 </body>
+<script>
+  let reviewForm = document.getElementById("review-form");
+  var eventObj;
+  reviewForm.onsubmit = event => {
+    eventObj = event;
+    event.preventDefault();
+    let review = {
+      "restaurant_id": self.restaurant.id,
+      "name": event.target.name.value,
+      "rating": event.target.rating.value,
+      "comments": event.target.review.value
+    }
+    console.log(review);
+    reviewForm.reset();
+  }
+</script>
 
 </html>

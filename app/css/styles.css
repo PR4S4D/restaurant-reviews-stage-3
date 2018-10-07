@@ -25,7 +25,9 @@ header nav {
 body,
 td,
 th,
-p {
+p,
+input,
+textarea {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 10pt;
   color: #333;
@@ -314,12 +316,14 @@ nav h1 a {
   width: 100%;
 }
 
+#add-review-container h3,
 #reviews-container h3 {
   color: #804200;
   font-size: 24pt;
   font-weight: 300;
   letter-spacing: -1px;
-  margin: 4% 0 0 0;
+  margin: 2% 0 0 0;
+  align-self: center;
 }
 #reviews-list {
   padding: 2%;
@@ -361,4 +365,37 @@ nav h1 a {
 
 .leaflet-container .leaflet-control {
   display: none;
+}
+
+#add-review-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#review-form {
+  display: flex;
+  flex-direction: column;
+  margin: 2%;
+}
+
+#review-form * {
+  margin: 1%;
+  padding: 0.5%;
+  border: none;
+  border-radius: 5px;
+  padding: 2%;
+}
+
+input[type="submit"] {
+  cursor: pointer;
+  background-color: #252831;
+  color: #fff;
+}
+
+#review-form .input-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+  margin: 1% 0;
 }

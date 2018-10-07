@@ -84,6 +84,14 @@
   #reviews-list li {
     width: 30%;
   }
+
+  #review-form .input-group {
+    flex-direction: row;
+  }
+
+  .input-group * {
+    width: 45%;
+  }
 }
 
 @media screen and (min-width: 1200px) {
