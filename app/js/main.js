@@ -155,6 +155,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
     ul.append(createRestaurantHTML(restaurant));
   });
   addMarkersToMap();
+  addFavoriteClickListener();
 };
 
 /**
@@ -176,9 +177,11 @@ createRestaurantHTML = restaurant => {
   const favImage = document.createElement("img");
   favImage.className = "fav";
   favImage.src = restaurant.is_favorite
-    ? "img/favourite.svg"
-    : "img/make_favourite.svg";
-  favImage.setAttribute("alt", "Add this to favourites");
+    ? "img/favorite.svg"
+    : "img/make_favorite.svg";
+  favImage.setAttribute("alt", "Add this to favorites");
+  favImage.setAttribute("data-id", restaurant.id);
+  favImage.setAttribute("data-favorite", restaurant.is_favorite);
 
   const name = document.createElement("h2");
   name.innerHTML = restaurant.name;
@@ -224,4 +227,26 @@ lazyLoading = () => {
     threshold: 0.1
   });
   observer.observe();
+};
+
+addFavoriteClickListener = () => {
+  const favImages = document.getElementsByClassName("fav");
+
+  if (favImages) {
+    Array.from(favImages).forEach(img =>
+      img.addEventListener("click", e => {
+        let image = e.target;
+        let restaurantId = image.getAttribute("data-id");
+        let isFavorite = image.getAttribute("data-favorite") != "true";
+
+        DBHelper.toggleFavorite({
+          restaurantId,
+          isFavorite
+        }).then(() => {
+          img.src = isFavorite ? "img/favorite.svg" : "img/make_favorite.svg";
+          img.setAttribute("data-favorite", isFavorite);
+        });
+      })
+    );
+  }
 };

@@ -34,7 +34,9 @@ var urlsToCache = [
   "/img/8_2x.jpg",
   "/img/9_2x.jpg",
   "/img/10_2x.jpg",
-  "/img/default_2x.jpg"
+  "/img/default_2x.jpg",
+  "/img/make_favorite.svg",
+  "/img/favorite.svg.jpg"
 ];
 
 self.addEventListener("install", function(event) {

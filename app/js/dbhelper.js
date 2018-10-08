@@ -242,6 +242,15 @@ class DBHelper {
       body: JSON.stringify(review)
     });
   }
+
+  static toggleFavorite({ restaurantId, isFavorite }) {
+    return fetch(
+      `${this.DATABASE_URL}/${restaurantId}?is_favorite=${isFavorite}`,
+      {
+        method: "PUT"
+      }
+    );
+  }
 }
 
 /* Index Db start */

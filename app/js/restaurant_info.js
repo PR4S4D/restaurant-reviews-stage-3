@@ -216,7 +216,7 @@ initReviewForm = () => {
     };
     DBHelper.postReview(review)
       .then(() => fetchRestaurantReviews())
-      .then(() => reviewForm.reset)
+      .then(() => reviewForm.reset())
       .catch(error => console.log("error posting review", review));
   };
 };
