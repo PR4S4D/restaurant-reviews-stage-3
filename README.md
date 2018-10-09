@@ -1,6 +1,7 @@
 # Restaurants Review Stage 3
 
-This project has been developed for Udacity MobileWebSpecialist nanodegree.This application shows the restaurants review.
+This project has been developed for Udacity MobileWebSpecialist nanodegree.This application shows the restaurants reviews.
+Also, you can add the restuarants to your favorites. Add you reviews to a restaurant even when you are offline.
 
 ## Getting Started
 
