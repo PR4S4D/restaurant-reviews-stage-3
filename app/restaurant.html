@@ -65,10 +65,12 @@
       <h3>Add a review</h3>
       <form id="review-form" method="post">
         <span class="input-group">
-          <input type="text" id="reviewer-name" name="name" placeholder="Your Name" required>
-          <input type="number" id="rating" name="rating" placeholder="Rating (1-5)" min="1" max="5" required>
+          <input type="text" id="reviewer-name" name="name" placeholder="Your Name" aria-label="Your name" required>
+          <input type="number" id="rating" name="rating" placeholder="Rating (1-5)" min="1" max="5" aria-label="Your rating between 1 to 5"
+            required>
         </span>
-        <textarea rows="4" id="restaurant-review" name="review" placeholder="Add your review here..." required></textarea>
+        <textarea rows="4" id="restaurant-review" name="review" placeholder="Add your review here..." aria-label="Your review"
+          required></textarea>
         <input type="submit" value="Submit Review">
       </form>
     </section>

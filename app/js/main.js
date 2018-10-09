@@ -176,9 +176,10 @@ createRestaurantHTML = restaurant => {
 
   const favImage = document.createElement("img");
   favImage.className = "fav";
-  favImage.src = restaurant.is_favorite
-    ? "img/favorite.svg"
-    : "img/make_favorite.svg";
+  favImage.src =
+    restaurant.is_favorite == "true"
+      ? "img/favorite.svg"
+      : "img/make_favorite.svg";
   favImage.setAttribute("alt", "Add this to favorites");
   favImage.setAttribute("data-id", restaurant.id);
   favImage.setAttribute("data-favorite", restaurant.is_favorite);

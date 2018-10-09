@@ -1,5 +1,6 @@
 const RESTAURANTS = "restaurants";
 const REVIEWS = "reviews";
+const OFFLINE_REVIEWS = "offline-reviews";
 const port = 1337; // Change this to your server port
 
 /**
@@ -231,7 +232,7 @@ class DBHelper {
       .then(response => response.json())
       .then(reviews => {
         updateReviewsCache(reviews);
-        return new Promise(resolve => resolve(reviews));
+        return reviews;
       })
       .catch(error => new Promise((resolve, reject) => reject(error)));
   }
@@ -289,7 +290,7 @@ getDBPromise = () => {
     return Promise.resolve();
   }
 
-  return idb.open("restaurants-db", 6, upgradeDB => {
+  return idb.open("restaurants-db", 11, upgradeDB => {
     if (!upgradeDB.objectStoreNames.contains(RESTAURANTS)) {
       let store = upgradeDB.createObjectStore(RESTAURANTS, { keyPath: "id" });
       store.createIndex("updatedAt", "updatedAt");
@@ -299,6 +300,11 @@ getDBPromise = () => {
         keyPath: ["restaurant_id", "id"]
       });
       reviewsStore.createIndex("updatedAt", "updatedAt");
+    }
+    if (!upgradeDB.objectStoreNames.contains(OFFLINE_REVIEWS)) {
+      let reviewsStore = upgradeDB.createObjectStore(OFFLINE_REVIEWS, {
+        keyPath: ["restaurant_id", "name"]
+      });
     }
   });
 };
@@ -325,6 +331,36 @@ updateReviewsCache = reviews => {
       .transaction(REVIEWS, "readwrite")
       .objectStore(REVIEWS);
     reviews.map(review => reviewsStore.put(review));
+  });
+};
+
+saveOfflineReview = review => {
+  if (!review) return;
+
+  return getDBPromise().then(db => {
+    let offlineReviewsStore = db
+      .transaction(OFFLINE_REVIEWS, "readwrite")
+      .objectStore(OFFLINE_REVIEWS);
+    offlineReviewsStore.put(review);
+  });
+};
+
+postOfflineReviews = () => {
+  return this.getDBPromise().then(db => {
+    if (!db) return;
+
+    let offlineReviewsStore = db
+      .transaction(OFFLINE_REVIEWS, "readwrite")
+      .objectStore(OFFLINE_REVIEWS);
+
+    offlineReviewsStore
+      .getAll()
+      .then(reviews => {
+        reviews.map(review => DBHelper.postReview(review));
+      })
+      .then(() => {
+        offlineReviewsStore.clear();
+      });
   });
 };
 

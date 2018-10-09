@@ -129,7 +129,7 @@ fetchRestaurantReviews = () => {
   let restaurantId = self.restaurant.id;
   // Display the cached reviews when available
   DBHelper.getCachedReviews(restaurantId).then(reviews => {
-    fillReviewsHTML(reviews);
+    reviews.length > 1 && fillReviewsHTML(reviews);
   });
   // Fetch new reviews from the API
   DBHelper.fetchRestaurantReviews(self.restaurant.id).then(reviews => {
@@ -148,7 +148,7 @@ fillReviewsHTML = reviews => {
     return;
   }
   const ul = document.getElementById("reviews-list");
-  ul.innerHTML = "";
+  if (ul.innerHTML) ul.innerHTML = "";
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
@@ -214,9 +214,22 @@ initReviewForm = () => {
       rating: event.target.rating.value,
       comments: event.target.review.value
     };
-    DBHelper.postReview(review)
-      .then(() => fetchRestaurantReviews())
-      .then(() => reviewForm.reset())
-      .catch(error => console.log("error posting review", review));
+
+    if (navigator.onLine) {
+      DBHelper.postReview(review)
+        .then(() => addNewReview(review))
+        .then(() => reviewForm.reset())
+        .catch(error => console.log("error posting review", review));
+    } else {
+      saveOfflineReview(review).then(() => {
+        addNewReview(review);
+        reviewForm.reset();
+      });
+    }
   };
+};
+
+addNewReview = review => {
+  const ul = document.getElementById("reviews-list");
+  ul.appendChild(createReviewHTML(review));
 };

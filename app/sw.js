@@ -1,4 +1,6 @@
-var CACHE_NAME = "restaurant-review-cache-18";
+importScripts("./js/dbhelper.js");
+
+var CACHE_NAME = "restaurant-review-cache-23";
 var urlsToCache = [
   "/",
   "/index.html",
@@ -36,7 +38,7 @@ var urlsToCache = [
   "/img/10_2x.jpg",
   "/img/default_2x.jpg",
   "/img/make_favorite.svg",
-  "/img/favorite.svg.jpg"
+  "/img/favorite.svg"
 ];
 
 self.addEventListener("install", function(event) {
@@ -81,4 +83,10 @@ self.addEventListener("fetch", function(event) {
         .catch(error => console.log(error));
     })
   );
+});
+
+self.addEventListener("sync", event => {
+  if (event.tag == "offline-reviews") {
+    postOfflineReviews();
+  }
 });
