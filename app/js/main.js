@@ -5,6 +5,10 @@ var newMap;
 var markers = [];
 var observer;
 
+window.addEventListener("load", () => {
+  window.addEventListener("online", e => DBHelper.updateFavoriteRestaurants());
+});
+
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
@@ -239,15 +243,26 @@ addFavoriteClickListener = () => {
         let image = e.target;
         let restaurantId = image.getAttribute("data-id");
         let isFavorite = image.getAttribute("data-favorite") != "true";
-
-        DBHelper.toggleFavorite({
+        const restaurant = {
           restaurantId,
           isFavorite
-        }).then(() => {
-          img.src = isFavorite ? "img/favorite.svg" : "img/make_favorite.svg";
-          img.setAttribute("data-favorite", isFavorite);
-        });
+        };
+
+        if (navigator.onLine) {
+          DBHelper.toggleFavorite(restaurant).then(() =>
+            updateFavoriteIcon(img, isFavorite)
+          );
+        } else {
+          DBHelper.saveOfflineFavorites(restaurant).then(() =>
+            updateFavoriteIcon(img, isFavorite)
+          );
+        }
       })
     );
   }
+};
+
+updateFavoriteIcon = (img, isFavorite) => {
+  img.src = isFavorite ? "img/favorite.svg" : "img/make_favorite.svg";
+  img.setAttribute("data-favorite", isFavorite);
 };

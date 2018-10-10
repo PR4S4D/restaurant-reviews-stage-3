@@ -4,9 +4,5 @@ if ("serviceWorker" in navigator) {
       .register("/sw.js")
       .then(console.log("Service worker Registered!"))
       .catch(err => console.log("Error while registering SW", err));
-
-    navigator.serviceWorker.ready.then(swRegistration => {
-      swRegistration.sync.register("offline-reviews");
-    });
   });
 }

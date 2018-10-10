@@ -1,6 +1,7 @@
 const RESTAURANTS = "restaurants";
 const REVIEWS = "reviews";
 const OFFLINE_REVIEWS = "offline-reviews";
+const OFFLINE_FAVORITES = "offline-favourites";
 const port = 1337; // Change this to your server port
 
 /**
@@ -252,6 +253,61 @@ class DBHelper {
       }
     );
   }
+
+  static postOfflineReviews() {
+    return getDBPromise().then(db => {
+      if (!db) return;
+
+      let offlineReviewsStore = db
+        .transaction(OFFLINE_REVIEWS, "readwrite")
+        .objectStore(OFFLINE_REVIEWS);
+
+      offlineReviewsStore
+        .getAll()
+        .then(reviews => {
+          reviews.map(review => DBHelper.postReview(review));
+        })
+        .then(() => offlineReviewsStore.clear());
+    });
+  }
+
+  static saveOfflineReview(review) {
+    if (!review) return;
+
+    return getDBPromise().then(db => {
+      let offlineReviewsStore = db
+        .transaction(OFFLINE_REVIEWS, "readwrite")
+        .objectStore(OFFLINE_REVIEWS);
+      offlineReviewsStore.put(review);
+    });
+  }
+
+  static saveOfflineFavorites(restaurant) {
+    console.log(restaurant);
+    return getDBPromise().then(db => {
+      let favoriteRestaurantsStore = db
+        .transaction(OFFLINE_FAVORITES, "readwrite")
+        .objectStore(OFFLINE_FAVORITES);
+      favoriteRestaurantsStore.put(restaurant);
+    });
+  }
+
+  static updateFavoriteRestaurants() {
+    return getDBPromise().then(db => {
+      if (!db) return;
+
+      let favStore = db
+        .transaction(OFFLINE_FAVORITES, "readwrite")
+        .objectStore(OFFLINE_FAVORITES);
+
+      favStore
+        .getAll()
+        .then(restaurants => {
+          restaurants.map(restaurant => DBHelper.toggleFavorite(restaurant));
+        })
+        .then(() => favStore.clear());
+    });
+  }
 }
 
 /* Index Db start */
@@ -290,7 +346,7 @@ getDBPromise = () => {
     return Promise.resolve();
   }
 
-  return idb.open("restaurants-db", 11, upgradeDB => {
+  return idb.open("restaurants-db", 12, upgradeDB => {
     if (!upgradeDB.objectStoreNames.contains(RESTAURANTS)) {
       let store = upgradeDB.createObjectStore(RESTAURANTS, { keyPath: "id" });
       store.createIndex("updatedAt", "updatedAt");
@@ -304,6 +360,11 @@ getDBPromise = () => {
     if (!upgradeDB.objectStoreNames.contains(OFFLINE_REVIEWS)) {
       let reviewsStore = upgradeDB.createObjectStore(OFFLINE_REVIEWS, {
         keyPath: ["restaurant_id", "name"]
+      });
+    }
+    if (!upgradeDB.objectStoreNames.contains(OFFLINE_FAVORITES)) {
+      let favouritesStore = upgradeDB.createObjectStore(OFFLINE_FAVORITES, {
+        keyPath: "restaurantId"
       });
     }
   });
@@ -331,36 +392,6 @@ updateReviewsCache = reviews => {
       .transaction(REVIEWS, "readwrite")
       .objectStore(REVIEWS);
     reviews.map(review => reviewsStore.put(review));
-  });
-};
-
-saveOfflineReview = review => {
-  if (!review) return;
-
-  return getDBPromise().then(db => {
-    let offlineReviewsStore = db
-      .transaction(OFFLINE_REVIEWS, "readwrite")
-      .objectStore(OFFLINE_REVIEWS);
-    offlineReviewsStore.put(review);
-  });
-};
-
-postOfflineReviews = () => {
-  return this.getDBPromise().then(db => {
-    if (!db) return;
-
-    let offlineReviewsStore = db
-      .transaction(OFFLINE_REVIEWS, "readwrite")
-      .objectStore(OFFLINE_REVIEWS);
-
-    offlineReviewsStore
-      .getAll()
-      .then(reviews => {
-        reviews.map(review => DBHelper.postReview(review));
-      })
-      .then(() => {
-        offlineReviewsStore.clear();
-      });
   });
 };
 

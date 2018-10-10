@@ -1,6 +1,10 @@
 let restaurant;
 var newMap;
 
+window.addEventListener("load", () => {
+  window.addEventListener("online", e => DBHelper.postOfflineReviews());
+});
+
 /**
  * Initialize map as soon as the page is loaded.
  */
@@ -221,7 +225,7 @@ initReviewForm = () => {
         .then(() => reviewForm.reset())
         .catch(error => console.log("error posting review", review));
     } else {
-      saveOfflineReview(review).then(() => {
+      DBHelper.saveOfflineReview(review).then(() => {
         addNewReview(review);
         reviewForm.reset();
       });
