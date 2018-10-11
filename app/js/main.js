@@ -1,11 +1,12 @@
-// let restaurants,
-//   neighborhoods,
-//   cuisines
 var newMap;
 var markers = [];
 var observer;
 
 window.addEventListener("load", () => {
+  if (navigator.onLine) {
+    DBHelper.updateFavoriteRestaurants();
+  }
+
   window.addEventListener("online", e => DBHelper.updateFavoriteRestaurants());
 });
 

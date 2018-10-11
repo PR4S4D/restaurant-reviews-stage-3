@@ -2,6 +2,9 @@ let restaurant;
 var newMap;
 
 window.addEventListener("load", () => {
+  if (navigator.onLine) {
+    DBHelper.postOfflineReviews();
+  }
   window.addEventListener("online", e => DBHelper.postOfflineReviews());
 });
 
