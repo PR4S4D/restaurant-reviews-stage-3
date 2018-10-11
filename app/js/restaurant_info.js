@@ -226,7 +226,13 @@ initReviewForm = () => {
       DBHelper.postReview(review)
         .then(() => addNewReview(review))
         .then(() => reviewForm.reset())
-        .catch(error => console.log("error posting review", review));
+        .catch(error => {
+          console.log("error posting review", review);
+          DBHelper.saveOfflineReview(review).then(() => {
+            addNewReview(review);
+            reviewForm.reset();
+          });
+        });
     } else {
       DBHelper.saveOfflineReview(review).then(() => {
         addNewReview(review);

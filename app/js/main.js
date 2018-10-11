@@ -250,9 +250,13 @@ addFavoriteClickListener = () => {
         };
 
         if (navigator.onLine) {
-          DBHelper.toggleFavorite(restaurant).then(() =>
-            updateFavoriteIcon(img, isFavorite)
-          );
+          DBHelper.toggleFavorite(restaurant)
+            .then(() => updateFavoriteIcon(img, isFavorite))
+            .catch(error => {
+              DBHelper.saveOfflineFavorites(restaurant).then(() =>
+                updateFavoriteIcon(img, isFavorite)
+              );
+            });
         } else {
           DBHelper.saveOfflineFavorites(restaurant).then(() =>
             updateFavoriteIcon(img, isFavorite)
